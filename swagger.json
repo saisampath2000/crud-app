@@ -1,0 +1,425 @@
+{
+	"swagger": "2.0",
+	"info": {
+		"version": "1.0.0",
+		"title": "Simple CURD Application",
+		"description": "Users can create, update, read, delete data from tables"
+	},
+	"host": "localhost:3000",
+	"basePath": "/",
+	"tags": [{
+			"name": "Tables",
+			"description": "API for tables"
+		},
+		{
+			"name": "Data",
+			"description": "API for data"
+		}
+	],
+	"schemes": ["http"],
+	"consumes": ["application/json"],
+	"produces": ["application/json"],
+	"paths": {
+		"/createTable": {
+			"post": {
+				"tags": ["Tables"],
+				"summary": "Create table in the system",
+				"consumes": "application/json",
+				"parameters": [{
+					"in": "body",
+					"name": "body",
+					"schema": {
+						"$ref": "#/definitions/ReqCreateTable"
+					}
+				}],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/ResCreateTable"
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"schema": {
+							"$ref": "#/definitions/BadRequest"
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"schema": {
+							"$ref": "#/definitions/InternalError"
+						}
+					}
+				}
+			}
+		},
+		"/createData/{tableName}": {
+			"post": {
+				"tags": ["Data"],
+				"summary": "Create Data in the system",
+				"consumes": "application/json",
+				"parameters": [{
+						"in": "path",
+						"name": "tableName",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"in": "body",
+						"name": "body",
+						"schema": {
+							"$ref": "#/definitions/ReqCreateData"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/ResCreateData"
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"schema": {
+							"$ref": "#/definitions/BadRequest"
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"schema": {
+							"$ref": "#/definitions/InternalError"
+						}
+					}
+				}
+			}
+		},
+		"/getData/{tableName}": {
+			"get": {
+				"tags": ["Data"],
+				"summary": "Get Data from table",
+				"consumes": "application/json",
+				"parameters": [{
+					"in": "path",
+					"name": "tableName",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/ResGetData"
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"schema": {
+							"$ref": "#/definitions/BadRequest"
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"schema": {
+							"$ref": "#/definitions/InternalError"
+						}
+					}
+				}
+			}
+		},
+		"/updateData/{tableName}/{id}": {
+			"patch": {
+				"tags": ["Data"],
+				"summary": "Update Data in the table using id",
+				"consumes": "application/json",
+				"parameters": [{
+						"in": "path",
+						"name": "tableName",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"in": "body",
+						"name": "body",
+						"schema": {
+							"$ref": "#/definitions/ReqUpdateData"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/ResUpdateData"
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"schema": {
+							"$ref": "#/definitions/BadRequest"
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"schema": {
+							"$ref": "#/definitions/InternalError"
+						}
+					}
+				}
+			}
+		},
+		"/deleteData/{tableName}/{id}": {
+			"delete": {
+				"tags": ["Data"],
+				"summary": "Delete Data from the table using id",
+				"consumes": "application/json",
+				"parameters": [{
+						"in": "path",
+						"name": "tableName",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/ResDeleteData"
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"schema": {
+							"$ref": "#/definitions/BadRequest"
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"schema": {
+							"$ref": "#/definitions/InternalError"
+						}
+					}
+				}
+			}
+		},
+		"/deleteTable/{tableName}": {
+			"delete": {
+				"tags": ["Tables"],
+				"summary": "Delete table from the system",
+				"consumes": "application/json",
+				"parameters": [{
+					"in": "path",
+					"name": "tableName",
+					"required": true,
+					"type": "string"
+				}],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/ResDeleteTable"
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"schema": {
+							"$ref": "#/definitions/BadRequest"
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"schema": {
+							"$ref": "#/definitions/InternalError"
+						}
+					}
+				}
+			}
+		}
+	},
+	"definitions": {
+		"ReqCreateTable": {
+			"required": ["tableName", "attributes"],
+			"properties": {
+				"tableName": {
+					"type": "string",
+					"example": "Test"
+				},
+				"attributes": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"name": {
+								"type": "string",
+								"example": "TEST1"
+							},
+							"type": {
+								"type": "string",
+								"example": "VARCHAR(20)"
+							}
+						}
+					}
+				}
+			}
+		},
+		"ReqCreateData": {
+			"required": ["attributes"],
+			"properties": {
+				"attributes": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"name": {
+								"type": "string",
+								"example": "TEST1"
+							},
+							"value": {
+								"type": "string",
+								"example": "Working"
+							}
+						}
+					}
+				}
+			}
+		},
+		"ReqUpdateData": {
+			"required": ["attributes"],
+			"properties": {
+				"attributes": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"name": {
+								"type": "string",
+								"example": "TEST1"
+							},
+							"value": {
+								"type": "string",
+								"example": "Working"
+							}
+						}
+					}
+				}
+			}
+		},
+		"ResCreateTable": {
+			"properties": {
+				"result": {
+					"type": "string",
+					"example": "Ok"
+				},
+				"message": {
+					"type": "string",
+					"example": "Table created Successfully"
+				}
+			}
+		},
+		"ResCreateData": {
+			"properties": {
+				"result": {
+					"type": "string",
+					"example": "Ok"
+				},
+				"id": {
+					"type": "string",
+					"example": "6015e4bc-dd26-44b2-a970-430d4717a20d"
+				},
+				"message": {
+					"type": "string",
+					"example": "Created Data Successfully"
+				}
+			}
+		},
+		"ResGetData": {
+			"properties": {
+				"result": {
+					"type": "string",
+					"example": "Ok"
+				},
+				"response": {
+					"type": "object",
+					"example": {}
+				},
+				"message": {
+					"type": "string",
+					"example": "Successfully retrieved data"
+				}
+			}
+		},
+		"ResUpdateData": {
+			"properties": {
+				"result": {
+					"type": "string",
+					"example": "Ok"
+				},
+				"message": {
+					"type": "string",
+					"example": "Successfully updated data in the table"
+				}
+			}
+		},
+		"ResDeleteData": {
+			"properties": {
+				"result": {
+					"type": "string",
+					"example": "Ok"
+				},
+				"message": {
+					"type": "string",
+					"example": "Deleted Data Successfully"
+				}
+			}
+		},
+		"ResDeleteTable": {
+			"properties": {
+				"result": {
+					"type": "string",
+					"example": "Ok"
+				},
+				"message": {
+					"type": "string",
+					"example": "Table Deleted Successfully"
+				}
+			}
+		},
+		"BadRequest": {
+			"properties": {
+				"result": {
+					"type": "string",
+					"example": "Error"
+				},
+				"message": {
+					"type": "string",
+					"example": "Incorrect Format"
+				}
+			}
+		},
+		"InternalError": {
+			"properties": {
+				"result": {
+					"type": "string",
+					"example": "Error"
+				},
+				"message": {
+					"type": "string",
+					"example": "could not connect to postgres"
+				}
+			}
+		}
+	}
+}
